@@ -1,0 +1,38 @@
+/* src/Component/AboutUs.css */
+.about-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+.about-title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.about-description {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.about-values h2 {
+  font-size: 28px;
+  color: #2980b9;
+  margin-bottom: 10px;
+}
+
+.about-values ul {
+  list-style: disc;
+  padding-left: 20px;
+}
+
+.about-values li {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
