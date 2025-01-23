@@ -1,24 +1,46 @@
 import React from "react";
+import { teamPhoto } from '../images';
 import "../CSS/FeaturedPlayer.css";
 
 const FeaturedPlayer = () => {
+    const players = [
+        {
+            name: "Player One",
+            position: "Forward",
+            number: "10"
+        },
+        {
+            name: "Player Two",
+            position: "Midfielder",
+            number: "8"
+        },
+        {
+            name: "Player Three",
+            position: "Defender",
+            number: "4"
+        }
+    ];
+
     return (
-        <section className="Featured-players">
-            <h2>Featured Player</h2>
+        <section className="featured-players">
+            <h2>Featured Players</h2>
             <div className="players-container">
-        <div className="player-card">
-          <h3>Player 1</h3>
-          <p>Forward</p>
-        </div>
-        <div className="player-card">
-          <h3>Player 2</h3>
-          <p>Midfielder</p>
-        </div>
-        <div className="player-card">
-          <h3>Player 3</h3>
-          <p>Defender</p>
-        </div>
-      </div>
+                {players.map((player, index) => (
+                    <div key={index} className="player-card">
+                        <div className="player-image" 
+                             style={{
+                                 backgroundImage: `url(${teamPhoto})`,
+                                 backgroundPosition: `${index * 33}% center`
+                             }}>
+                            <div className="player-number">{player.number}</div>
+                        </div>
+                        <div className="player-info">
+                            <h3>{player.name}</h3>
+                            <p>{player.position}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </section>
     );
 };

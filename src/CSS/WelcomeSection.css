@@ -1,16 +1,94 @@
 .welcome-section {
-    padding: 2rem;
-    text-align: center;
-    background-color: #f9f9f9;
-  }
-  
-  .welcome-section h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .welcome-section p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-  }
+  position: relative;
+  height: 100vh;
+  background-image: var(--hero-bg-url);
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+}
+
+.welcome-content {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 200px 2rem 0;
+  text-align: center;
+}
+
+.welcome-content h1 {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.welcome-content p {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.cta-button {
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.cta-button.primary {
+  background-color: #0055FF;
+  color: white;
+}
+
+.cta-button.secondary {
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+.news-strip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.8);
+  padding: 1rem 0;
+}
+
+.news-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.news-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.news-category {
+  background-color: #0055FF;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
   
