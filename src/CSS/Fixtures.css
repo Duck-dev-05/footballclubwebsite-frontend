@@ -6,7 +6,7 @@
 .fixtures-hero {
   height: 300px;
   background-size: cover;
-  background-position: center;
+  background-position: center 25%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,16 +15,19 @@
 }
 
 .fixtures-hero h1 {
-  font-size: 3rem;
+  font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
 .fixtures-content {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: -60px auto 2rem;
   padding: 0 2rem;
+  position: relative;
+  z-index: 2;
 }
 
 .fixtures-list {
@@ -35,14 +38,15 @@
 
 .fixture-card {
   background: white;
-  border-radius: 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
 }
 
 .fixture-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
 }
 
 .fixture-header {
@@ -54,18 +58,13 @@
   border-bottom: 1px solid #eee;
 }
 
-.competition-badge {
-  background: #0055FF;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 500;
+.competition {
+  font-weight: 600;
+  color: #0055FF;
 }
 
-.fixture-date {
+.date {
   color: #666;
-  font-weight: 500;
 }
 
 .fixture-main {
@@ -73,6 +72,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 2rem;
 }
 
 .team {
@@ -84,10 +84,12 @@
 
 .home-team {
   justify-content: flex-end;
+  text-align: right;
 }
 
 .away-team {
   justify-content: flex-start;
+  text-align: left;
 }
 
 .team-name {
@@ -100,87 +102,110 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: #0055FF;
-}
-
-.fixture-center {
-  padding: 0 2rem;
+  min-width: 30px;
   text-align: center;
 }
 
-.vs {
-  font-weight: 700;
-  color: #999;
-  margin-bottom: 0.5rem;
+.score-input {
+  width: 60px;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  border: 2px solid #0055FF;
+  border-radius: 4px;
+  text-align: center;
 }
 
-.match-time {
-  font-size: 0.9rem;
+.fixture-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vs {
+  font-weight: 600;
   color: #666;
+}
+
+.venue {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.admin-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.edit-btn,
+.save-btn,
+.cancel-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.edit-btn {
+  background: #0055FF;
+  color: white;
+}
+
+.save-btn {
+  background: #28a745;
+  color: white;
+}
+
+.cancel-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.edit-btn:hover {
+  background: #0044CC;
+}
+
+.save-btn:hover {
+  background: #218838;
+}
+
+.cancel-btn:hover {
+  background: #c82333;
 }
 
 .fixture-footer {
   padding: 1rem;
   background: #f8f9fa;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   border-top: 1px solid #eee;
-}
-
-.venue {
-  color: #666;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.score-editor {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.score-editor input {
-  width: 60px;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
   text-align: center;
 }
 
-.score-separator {
-  color: #666;
+.status {
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
   font-weight: 500;
 }
 
-.edit-button, .save-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.edit-button {
-  background-color: #0055FF;
+.status.completed {
+  background: #28a745;
   color: white;
 }
 
-.edit-button:hover {
-  background-color: #0044CC;
-}
-
-.save-button {
-  background-color: #28a745;
-  color: white;
-}
-
-.save-button:hover {
-  background-color: #218838;
+.status.upcoming {
+  background: #ffc107;
+  color: #000;
 }
 
 @media (max-width: 768px) {
+  .fixtures-content {
+    padding: 1rem;
+  }
+
   .fixture-main {
     padding: 1rem;
     flex-direction: column;

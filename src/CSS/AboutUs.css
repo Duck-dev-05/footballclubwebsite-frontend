@@ -1,38 +1,247 @@
 /* src/Component/AboutUs.css */
 .about-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* Hero Section */
+.about-hero {
+  height: 60vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-image {
+  height: 100%;
+  background-size: cover;
+  background-position: center 25%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.about-hero h1 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Mission Section */
+.mission-section {
+  background: white;
+  padding: 4rem 2rem;
+  margin-top: -60px;
+  position: relative;
+  z-index: 2;
+}
+
+.mission-content {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.mission-content h2 {
+  font-size: 2.5rem;
   color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.mission-content p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #666;
+}
+
+/* Stats Section */
+.stats-section {
+  padding: 4rem 2rem;
+  background: #0055FF;
+  color: white;
+}
+
+.stats-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+/* Team Photo Section */
+.team-section {
+  padding: 4rem 2rem;
+  background: white;
+}
+
+.team-photo-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.team-photo {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.photo-caption {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+/* Values Section */
+.values-section {
+  padding: 4rem 2rem;
+  background: #f8f9fa;
+}
+
+.values-section h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 3rem;
+}
+
+.values-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.value-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.value-card:hover {
+  transform: translateY(-5px);
+}
+
+.value-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.value-card h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.value-card p {
+  color: #666;
   line-height: 1.6;
 }
 
-.about-title {
-  font-size: 36px;
-  font-weight: bold;
-  color: #2c3e50;
+/* Join Section */
+.join-section {
+  padding: 6rem 2rem;
+  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), var(--team-photo-url);
+  background-size: cover;
+  background-position: center;
+  color: white;
   text-align: center;
-  margin-bottom: 20px;
 }
 
-.about-description {
-  font-size: 18px;
-  margin-bottom: 15px;
+.join-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
 }
 
-.about-values h2 {
-  font-size: 28px;
-  color: #2980b9;
-  margin-bottom: 10px;
+.join-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
 }
 
-.about-values ul {
-  list-style: disc;
-  padding-left: 20px;
+.join-button {
+  background: #0055FF;
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
 }
 
-.about-values li {
-  font-size: 18px;
-  margin-bottom: 5px;
+.join-button:hover {
+  background: #0044CC;
+  color: white;
+  text-decoration: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .stats-grid,
+  .values-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .about-hero {
+    height: 50vh;
+  }
+
+  .mission-section {
+    margin-top: -40px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .values-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mission-content h2,
+  .values-section h2,
+  .join-content h2 {
+    font-size: 2rem;
+  }
 }

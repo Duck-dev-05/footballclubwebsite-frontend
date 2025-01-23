@@ -1,49 +1,133 @@
 .login-container {
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 80px);
-  margin-top: 80px;
-  background-color: #f5f5f5;
-  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), var(--team-photo-url);
+  justify-content: center;
   background-size: cover;
   background-position: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(8px);
+}
+
+.login-content {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+.login-info {
+  flex: 1;
+  padding: 4rem;
+  background: linear-gradient(135deg, rgba(0, 85, 255, 0.9), rgba(0, 68, 204, 0.9));
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.club-logo {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 2rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.club-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.login-info h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.login-info p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  line-height: 1.6;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 .login-box {
-  background-color: rgba(255, 255, 255, 0.95);
+  flex: 1;
+  background: white;
   padding: 3rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 400px;
-  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
 }
 
-.login-box h2 {
-  text-align: center;
-  color: #333;
+.login-tabs {
+  display: flex;
   margin-bottom: 2rem;
-  font-size: 2rem;
+  border-bottom: 2px solid #eee;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  background: none;
+  font-size: 1.1rem;
   font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+  color: #0055FF;
+  border-bottom: 2px solid #0055FF;
+  margin-bottom: -2px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #555;
   font-weight: 500;
+  color: #333;
 }
 
 .form-group input {
-  width: 100%;
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 0.8rem;
+  border: 2px solid #eee;
+  border-radius: 5px;
   font-size: 1rem;
   transition: border-color 0.3s ease;
 }
@@ -53,41 +137,182 @@
   outline: none;
 }
 
-.login-button {
-  width: 100%;
-  padding: 1rem;
-  background-color: #0055FF;
+.submit-btn {
+  background: #0055FF;
   color: white;
+  padding: 1rem;
   border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: 500;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.login-button:hover {
-  background-color: #0044CC;
+.submit-btn:hover {
+  background: #0044CC;
+}
+
+.forgot-password {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.text-btn {
+  background: none;
+  border: none;
+  color: #0055FF;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.text-btn:hover {
+  text-decoration: underline;
+}
+
+.social-login {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.social-login p {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.social-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-btn {
+  flex: 1;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: opacity 0.3s ease;
+}
+
+.social-btn:hover {
+  opacity: 0.9;
+}
+
+.social-btn.google {
+  background: #DB4437;
+  color: white;
+}
+
+.social-btn.facebook {
+  background: #4267B2;
+  color: white;
+}
+
+.back-btn {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 5px;
+  color: #666;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+  background: #eee;
 }
 
 .error-message {
-  color: #dc3545;
-  text-align: center;
+  background: #ffebee;
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 5px;
   margin-bottom: 1rem;
-  padding: 0.5rem;
-  background-color: #f8d7da;
-  border-radius: 4px;
-}
-
-.login-footer {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid #ddd;
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.login-footer p {
-  margin: 0.25rem 0;
   text-align: center;
+}
+
+.success-message {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 1rem;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+@media (max-width: 1024px) {
+  .login-content {
+    max-width: 900px;
+  }
+
+  .login-info {
+    padding: 3rem;
+  }
+
+  .club-logo {
+    width: 120px;
+    height: 120px;
+  }
+
+  .login-info h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-content {
+    flex-direction: column;
+    max-width: 500px;
+  }
+
+  .login-info {
+    padding: 2rem;
+  }
+
+  .club-logo {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 1.5rem;
+  }
+
+  .login-info h1 {
+    font-size: 1.8rem;
+  }
+
+  .login-box {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 1rem;
+  }
+
+  .login-info {
+    padding: 1.5rem;
+  }
+
+  .login-info h1 {
+    font-size: 1.5rem;
+  }
+
+  .login-box {
+    padding: 1.5rem;
+  }
+
+  .social-buttons {
+    flex-direction: column;
+  }
+
+  .tab-btn {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
 }

@@ -6,139 +6,146 @@ const Fixtures = ({ isAdmin }) => {
   const [fixtures, setFixtures] = useState([
     {
       id: 1,
+      date: "2024-01-15",
+      competition: "League Match",
       homeTeam: "FC ESCUELA",
       awayTeam: "City FC",
-      date: "2024-02-15",
-      time: "15:00",
-      venue: "Home Stadium",
-      competition: "League Match",
-      homeScore: null,
-      awayScore: null
+      homeScore: 3,
+      awayScore: 1,
+      status: "Completed",
+      venue: "Home Stadium"
     },
     {
-      id: 2, 
+      id: 2,
+      date: "2024-01-22",
+      competition: "Cup Match",
       homeTeam: "United FC",
       awayTeam: "FC ESCUELA",
-      date: "2024-02-22",
-      time: "19:45",
-      venue: "Away Stadium",
-      competition: "Cup Match",
-      homeScore: null,
-      awayScore: null
+      homeScore: 2,
+      awayScore: 2,
+      status: "Completed",
+      venue: "Away Stadium"
     },
     {
       id: 3,
-      homeTeam: "FC ESCUELA",
-      awayTeam: "Athletic Club",
-      date: "2024-03-01",
-      time: "20:00",
-      venue: "Home Stadium", 
+      date: "2024-02-01",
       competition: "League Match",
+      homeTeam: "FC ESCUELA",
+      awayTeam: "Rovers FC",
       homeScore: null,
-      awayScore: null
+      awayScore: null,
+      status: "Upcoming",
+      venue: "Home Stadium"
     }
   ]);
 
-  const [editingId, setEditingId] = useState(null);
+  const [editingFixture, setEditingFixture] = useState(null);
+  const [tempScores, setTempScores] = useState({ home: '', away: '' });
 
-  const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-GB', { 
-      day: 'numeric', 
-      month: 'short', 
-      year: 'numeric' 
+  const handleEdit = (fixture) => {
+    if (!isAdmin) return;
+    setEditingFixture(fixture.id);
+    setTempScores({
+      home: fixture.homeScore || '',
+      away: fixture.awayScore || ''
     });
   };
 
-  const handleEditResult = (id) => {
-    setEditingId(id);
+  const handleSave = (fixtureId) => {
+    if (!isAdmin) return;
+    setFixtures(fixtures.map(fixture => {
+      if (fixture.id === fixtureId) {
+        return {
+          ...fixture,
+          homeScore: parseInt(tempScores.home) || 0,
+          awayScore: parseInt(tempScores.away) || 0,
+          status: 'Completed'
+        };
+      }
+      return fixture;
+    }));
+    setEditingFixture(null);
   };
 
-  const handleSaveResult = (id, homeScore, awayScore) => {
-    setFixtures(fixtures.map(fixture => 
-      fixture.id === id 
-        ? { ...fixture, homeScore, awayScore }
-        : fixture
-    ));
-    setEditingId(null);
+  const handleCancel = () => {
+    setEditingFixture(null);
+    setTempScores({ home: '', away: '' });
   };
 
   return (
     <div className="fixtures-container">
-      <div className="fixtures-hero" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${teamPhoto})` }}>
-        <h1>Upcoming Fixtures</h1>
+      <div className="fixtures-hero" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url(${teamPhoto})` }}>
+        <h1>Fixtures & Results</h1>
       </div>
       
       <div className="fixtures-content">
         <div className="fixtures-list">
-          {fixtures.map(fixture => (
+          {fixtures.map((fixture) => (
             <div key={fixture.id} className="fixture-card">
               <div className="fixture-header">
-                <div className="competition-badge">{fixture.competition}</div>
-                <div className="fixture-date">{formatDate(fixture.date)}</div>
+                <span className="competition">{fixture.competition}</span>
+                <span className="date">{new Date(fixture.date).toLocaleDateString()}</span>
               </div>
               
               <div className="fixture-main">
                 <div className="team home-team">
                   <span className="team-name">{fixture.homeTeam}</span>
-                  {fixture.homeScore !== null && <span className="score">{fixture.homeScore}</span>}
+                  {editingFixture === fixture.id ? (
+                    <input
+                      type="number"
+                      value={tempScores.home}
+                      onChange={(e) => setTempScores({ ...tempScores, home: e.target.value })}
+                      className="score-input"
+                      min="0"
+                    />
+                  ) : (
+                    <span className="score">{fixture.homeScore ?? '-'}</span>
+                  )}
                 </div>
                 
                 <div className="fixture-center">
-                  <div className="vs">VS</div>
-                  <div className="match-time">{fixture.time}</div>
+                  <span className="vs">VS</span>
+                  <span className="venue">{fixture.venue}</span>
+                  {isAdmin && fixture.status !== 'Upcoming' && (
+                    <div className="admin-controls">
+                      {editingFixture === fixture.id ? (
+                        <>
+                          <button onClick={() => handleSave(fixture.id)} className="save-btn">
+                            Save
+                          </button>
+                          <button onClick={handleCancel} className="cancel-btn">
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <button onClick={() => handleEdit(fixture)} className="edit-btn">
+                          Edit Score
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
                 
                 <div className="team away-team">
-                  {fixture.awayScore !== null && <span className="score">{fixture.awayScore}</span>}
                   <span className="team-name">{fixture.awayTeam}</span>
+                  {editingFixture === fixture.id ? (
+                    <input
+                      type="number"
+                      value={tempScores.away}
+                      onChange={(e) => setTempScores({ ...tempScores, away: e.target.value })}
+                      className="score-input"
+                      min="0"
+                    />
+                  ) : (
+                    <span className="score">{fixture.awayScore ?? '-'}</span>
+                  )}
                 </div>
               </div>
 
               <div className="fixture-footer">
-                <div className="venue">
-                  <i className="fas fa-map-marker-alt"></i>
-                  {fixture.venue}
-                </div>
-                
-                {editingId === fixture.id ? (
-                  <div className="score-editor">
-                    <input 
-                      type="number" 
-                      defaultValue={fixture.homeScore || ''} 
-                      min="0"
-                      placeholder="Home"
-                      id={`home-${fixture.id}`}
-                    />
-                    <span className="score-separator">-</span>
-                    <input 
-                      type="number" 
-                      defaultValue={fixture.awayScore || ''} 
-                      min="0"
-                      placeholder="Away"
-                      id={`away-${fixture.id}`}
-                    />
-                    <button 
-                      className="save-button"
-                      onClick={() => {
-                        const homeScore = document.getElementById(`home-${fixture.id}`).value;
-                        const awayScore = document.getElementById(`away-${fixture.id}`).value;
-                        handleSaveResult(fixture.id, homeScore, awayScore);
-                      }}
-                    >
-                      Save
-                    </button>
-                  </div>
-                ) : (
-                  isAdmin && (
-                    <button 
-                      className="edit-button"
-                      onClick={() => handleEditResult(fixture.id)}
-                    >
-                      Edit Result
-                    </button>
-                  )
-                )}
+                <span className={`status ${fixture.status.toLowerCase()}`}>
+                  {fixture.status}
+                </span>
               </div>
             </div>
           ))}

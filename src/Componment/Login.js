@@ -1,100 +1,234 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { teamPhoto } from '../images';
 import '../CSS/Login.css';
 
 const Login = ({ setIsAdmin }) => {
-  const [credentials, setCredentials] = useState({
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('login');
+  const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: '',
+    name: '',
+    role: 'user'
   });
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [success, setSuccess] = useState('');
 
-  // Simulated user database (in a real app, this would be on the backend)
-  const users = [
-    {
-      email: 'admin@fcescuela.com',
-      password: 'admin123',
-      role: 'admin'
-    },
-    {
-      email: 'user@fcescuela.com',
-      password: 'user123',
-      role: 'user'
-    }
-  ];
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCredentials(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    setError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
-
-    const user = users.find(user => user.email === credentials.email);
-
-    if (user && user.password === credentials.password) {
-      // Set admin status based on user role
-      setIsAdmin(user.role === 'admin');
-      
-      // Store user info in localStorage
-      localStorage.setItem('userRole', user.role);
-      localStorage.setItem('isLoggedIn', 'true');
-      
-      // Redirect to home page
-      navigate('/');
-    } else {
-      setError('Invalid email or password');
+    // Here you would typically make an API call to verify credentials
+    try {
+      // Simulated authentication
+      if (formData.email === 'admin@fcescuela.com' && formData.password === 'admin123') {
+        setIsAdmin(true);
+        localStorage.setItem('userRole', 'admin');
+        setSuccess('Login successful!');
+        setTimeout(() => navigate('/'), 1500);
+      } else if (formData.email === 'user@fcescuela.com' && formData.password === 'user123') {
+        setIsAdmin(false);
+        localStorage.setItem('userRole', 'user');
+        setSuccess('Login successful!');
+        setTimeout(() => navigate('/'), 1500);
+      } else {
+        setError('Invalid email or password');
+      }
+    } catch (err) {
+      setError('Login failed. Please try again.');
     }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+    // Here you would make an API call to register the user
+    try {
+      setSuccess('Registration successful! Please login.');
+      setTimeout(() => setActiveTab('login'), 1500);
+    } catch (err) {
+      setError('Registration failed. Please try again.');
+    }
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    // Here you would make an API call to handle password reset
+    try {
+      setSuccess('Password reset link sent to your email!');
+    } catch (err) {
+      setError('Failed to send reset link. Please try again.');
+    }
+  };
+
+  const handleSocialLogin = (platform) => {
+    // Here you would implement social media authentication
+    console.log(`Logging in with ${platform}`);
   };
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <h2>Login to FC ESCUELA</h2>
-        {error && <div className="error-message">{error}</div>}
-        
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Email:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={credentials.email}
-              onChange={handleChange}
-              required
-              placeholder="Enter your email"
-            />
+    <div className="login-container" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${teamPhoto})` }}>
+      <div className="login-content">
+        {/* Left side - Club Info */}
+        <div className="login-info">
+          <div className="club-logo">
+            <img src={teamPhoto} alt="FC ESCUELA Logo" />
+          </div>
+          <h1>Welcome to FC ESCUELA</h1>
+          <p>Join our football community and experience excellence in the beautiful game.</p>
+        </div>
+
+        {/* Right side - Login Form */}
+        <div className="login-box">
+          <div className="login-tabs">
+            <button 
+              className={`tab-btn ${activeTab === 'login' ? 'active' : ''}`}
+              onClick={() => setActiveTab('login')}
+            >
+              Sign In
+            </button>
+            <button 
+              className={`tab-btn ${activeTab === 'register' ? 'active' : ''}`}
+              onClick={() => setActiveTab('register')}
+            >
+              Register
+            </button>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password:</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={credentials.password}
-              onChange={handleChange}
-              required
-              placeholder="Enter your password"
-            />
-          </div>
+          {error && <div className="error-message">{error}</div>}
+          {success && <div className="success-message">{success}</div>}
 
-          <button type="submit" className="login-button">
-            Login
-          </button>
-        </form>
+          {activeTab === 'login' ? (
+            <>
+              <form onSubmit={handleLogin} className="login-form">
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <button type="submit" className="submit-btn">Sign In</button>
+              </form>
 
-        <div className="login-footer">
-          <p>Demo Credentials:</p>
-          <p>Admin: admin@fcescuela.com / admin123</p>
-          <p>User: user@fcescuela.com / user123</p>
+              <div className="forgot-password">
+                <button 
+                  className="text-btn"
+                  onClick={() => setActiveTab('forgot')}
+                >
+                  Forgot Password?
+                </button>
+              </div>
+
+              <div className="social-login">
+                <p>Or sign in with:</p>
+                <div className="social-buttons">
+                  <button 
+                    onClick={() => handleSocialLogin('google')}
+                    className="social-btn google"
+                  >
+                    <FontAwesomeIcon icon={['fab', 'google']} /> Google
+                  </button>
+                  <button 
+                    onClick={() => handleSocialLogin('facebook')}
+                    className="social-btn facebook"
+                  >
+                    <FontAwesomeIcon icon={['fab', 'facebook']} /> Facebook
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : activeTab === 'register' ? (
+            <form onSubmit={handleRegister} className="login-form">
+              <div className="form-group">
+                <label>Full Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Confirm Password</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <button type="submit" className="submit-btn">Register</button>
+            </form>
+          ) : (
+            <form onSubmit={handleForgotPassword} className="login-form">
+              <div className="form-group">
+                <label>Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <button type="submit" className="submit-btn">Reset Password</button>
+              <button 
+                type="button" 
+                className="back-btn"
+                onClick={() => setActiveTab('login')}
+              >
+                Back to Login
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </div>
