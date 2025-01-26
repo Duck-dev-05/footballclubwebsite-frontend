@@ -1,0 +1,175 @@
+.team-calendar-preview {
+  padding: 6rem 2rem;
+  background-color: #f8f9fa;
+}
+
+.calendar-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+}
+
+.calendar-preview-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.calendar-preview-header svg {
+  color: #0055FF;
+}
+
+.view-calendar-link {
+  color: #0055FF;
+  text-decoration: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: gap 0.3s ease;
+}
+
+.view-calendar-link:hover {
+  gap: 0.75rem;
+}
+
+.upcoming-events {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+}
+
+.event-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.event-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #0055FF;
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  min-width: 80px;
+}
+
+.date-day {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.date-month {
+  font-size: 1rem;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+}
+
+.event-details {
+  flex: 1;
+}
+
+.event-details h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #333;
+}
+
+.event-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.event-time, .event-location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.event-time svg, .event-location svg {
+  color: #0055FF;
+  font-size: 0.8rem;
+}
+
+.calendar-cta {
+  text-align: center;
+}
+
+.schedule-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #0055FF;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.schedule-button:hover {
+  background: #0044CC;
+  gap: 1rem;
+}
+
+.calendar-loading, .calendar-error {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.calendar-error {
+  color: #dc3545;
+}
+
+@media (max-width: 1024px) {
+  .upcoming-events {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .team-calendar-preview {
+    padding: 4rem 1.5rem;
+  }
+
+  .calendar-preview-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .calendar-preview-header h2 {
+    font-size: 2rem;
+    justify-content: center;
+  }
+
+  .upcoming-events {
+    grid-template-columns: 1fr;
+  }
+} 

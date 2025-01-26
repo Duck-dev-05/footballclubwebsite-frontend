@@ -64,6 +64,29 @@ const Contact = () => {
     }
   ];
 
+  const socialLinks = [
+    {
+      platform: 'facebook',
+      url: 'https://www.facebook.com/profile.php?id=100083085867194',
+      label: 'Follow us on Facebook'
+    },
+    {
+      platform: 'twitter',
+      url: 'https://twitter.com/FCEscuela',  // Replace with actual Twitter URL when available
+      label: 'Follow us on Twitter'
+    },
+    {
+      platform: 'instagram',
+      url: 'https://instagram.com/fcescuela',  // Replace with actual Instagram URL when available
+      label: 'Follow us on Instagram'
+    },
+    {
+      platform: 'youtube',
+      url: 'https://youtube.com/@fcescuela',  // Replace with actual YouTube URL when available
+      label: 'Subscribe to our YouTube channel'
+    }
+  ];
+
   return (
     <div className="contact-container">
       {/* Hero Section */}
@@ -106,22 +129,29 @@ const Contact = () => {
           ))}
         </div>
 
-        {/* Social Media Section */}
+        {/* Updated Social Media Section */}
         <div className="social-section">
           <h2>Follow Us</h2>
           <div className="social-links">
-            <a href="#" className="social-link">
-              <FontAwesomeIcon icon={['fab', 'facebook']} />
-            </a>
-            <a href="#" className="social-link">
-              <FontAwesomeIcon icon={['fab', 'twitter']} />
-            </a>
-            <a href="#" className="social-link">
-              <FontAwesomeIcon icon={['fab', 'instagram']} />
-            </a>
-            <a href="#" className="social-link">
-              <FontAwesomeIcon icon={['fab', 'youtube']} />
-            </a>
+            {socialLinks.map((social, index) => (
+              <a 
+                key={index}
+                href={social.url}
+                className="social-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={social.label}
+              >
+                <FontAwesomeIcon icon={['fab', social.platform]} />
+                <span className="social-platform-name">{social.platform}</span>
+              </a>
+            ))}
+          </div>
+
+          {/* Add a call-to-action section */}
+          <div className="social-cta">
+            <p>Stay connected with FC ESCUELA on social media for the latest updates, 
+               match highlights, and exclusive content!</p>
           </div>
         </div>
       </div>
