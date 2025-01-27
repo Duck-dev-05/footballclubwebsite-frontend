@@ -25,6 +25,15 @@ const Navbar = () => {
     };
   }, []);
 
+  const menuItems = [
+    { path: '/', label: 'Home' },
+    { path: '/about', label: 'About' },
+    { path: '/teams', label: 'Teams' },
+    { path: '/fixtures', label: 'Fixtures' },
+    { path: '/news', label: 'News' },
+    { path: '/contact', label: 'Contact' }
+  ];
+
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container">

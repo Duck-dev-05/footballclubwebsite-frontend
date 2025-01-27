@@ -37,14 +37,7 @@ function App() {
           <Route path="/" element={<WelcomeSection />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/FeaturedPlayers" element={<FeaturedPlayer />} />
-          <Route 
-            path="/fixtures" 
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <Fixtures />
-              </ProtectedRoute>
-            } 
-          />
+          <Route path="/fixtures" element={<Fixtures />} />
           <Route path="/signin" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
