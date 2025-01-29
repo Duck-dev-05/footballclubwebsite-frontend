@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { teamPhoto } from '../images';
 import NextEvents from './NextEvents';
 import '../CSS/WelcomeSection.css';
+import { faCalendarAlt, faUsers, faFutbol, faTrophy } from '@fortawesome/free-solid-svg-icons';
 
 const WelcomeSection = () => {
     const latestNews = [
@@ -154,18 +155,22 @@ const WelcomeSection = () => {
             <section className="stats-section">
                 <div className="stats-container">
                     <div className="stat-item">
+                        <FontAwesomeIcon icon={faCalendarAlt} className="stat-icon" />
                         <span className="stat-number">2021</span>
                         <span className="stat-label">Founded</span>
                     </div>
                     <div className="stat-item">
+                        <FontAwesomeIcon icon={faUsers} className="stat-icon" />
                         <span className="stat-number">20+</span>
                         <span className="stat-label">Players</span>
                     </div>
                     <div className="stat-item">
+                        <FontAwesomeIcon icon={faFutbol} className="stat-icon" />
                         <span className="stat-number">10+</span>
                         <span className="stat-label">Matches</span>
                     </div>
                     <div className="stat-item">
+                        <FontAwesomeIcon icon={faTrophy} className="stat-icon" />
                         <span className="stat-number">5+</span>
                         <span className="stat-label">Trophies</span>
                     </div>
