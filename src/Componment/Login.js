@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import SocialLogin from '../components/auth/SocialLogin';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { teamPhoto } from '../images';
 import '../CSS/Login.css';
 
@@ -20,6 +19,23 @@ const Login = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const handleLoginSuccess = (data) => {
+    // Store auth data
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('userId', data.user.id);
+    localStorage.setItem('userRole', data.user.role);
+    localStorage.setItem('username', data.user.username);
+    localStorage.setItem('email', data.user.email);
+
+    // Redirect based on role
+    if (data.user.role === 'admin') {
+      navigate('/admin/dashboard');
+    } else {
+      const from = location.state?.from?.pathname || '/';
+      navigate(from);
+    }
+  };
 
   const handleInputChange = (e) => {
     setFormData({
@@ -49,20 +65,7 @@ const Login = () => {
         throw new Error(data.message || 'Login failed');
       }
 
-      // Store auth data
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('userId', data.user.id);
-      localStorage.setItem('userRole', data.user.role);
-      localStorage.setItem('username', data.user.username);
-
-      // Redirect based on role
-      if (data.user.role === 'admin') {
-        navigate('/admin/dashboard');
-      } else {
-        // Redirect to the page they tried to access or home
-        const from = location.state?.from?.pathname || '/';
-        navigate(from);
-      }
+      handleLoginSuccess(data);
     } catch (err) {
       setError(err.message || 'An error occurred during login');
     } finally {
@@ -93,16 +96,6 @@ const Login = () => {
     } catch (err) {
       setError('Failed to send reset link. Please try again.');
     }
-  };
-
-  const handleSocialLogin = (data) => {
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('userId', data.user.id);
-    localStorage.setItem('userRole', data.user.role);
-    localStorage.setItem('username', data.user.username);
-    
-    const from = location.state?.from?.pathname || '/';
-    navigate(from);
   };
 
   return (
@@ -176,24 +169,6 @@ const Login = () => {
                     Forgot Password?
                   </button>
                 </div>
-
-                <div className="social-login">
-                  <p>Or sign in with:</p>
-                  <div className="social-buttons">
-                    <button 
-                      onClick={() => handleSocialLogin('google')}
-                      className="social-btn google"
-                    >
-                      <FontAwesomeIcon icon={['fab', 'google']} /> Google
-                    </button>
-                    <button 
-                      onClick={() => handleSocialLogin('facebook')}
-                      className="social-btn facebook"
-                    >
-                      <FontAwesomeIcon icon={['fab', 'facebook']} /> Facebook
-                    </button>
-                  </div>
-                </div>
               </>
             ) : activeTab === 'register' ? (
               <form onSubmit={handleRegister} className="login-form">
@@ -262,7 +237,7 @@ const Login = () => {
               </form>
             )}
           </div>
-          <SocialLogin onSocialLogin={handleSocialLogin} />
+          <SocialLogin onSocialLogin={handleLoginSuccess} />
         </div>
       </div>
     </GoogleOAuthProvider>

@@ -8,7 +8,7 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const { token } = useParams();
   const [formData, setFormData] = useState({
-    email: '',
+    token: token || '',
     newPassword: '',
     confirmPassword: ''
   });
@@ -27,56 +27,62 @@ const ResetPassword = () => {
   const handleRequestReset = async (e) => {
     e.preventDefault();
     try {
-      // Here you would make an API call to request password reset
-      const response = await fetch('your-api/request-reset', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: formData.email }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/auth/forgot-password`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: formData.email }),
+        }
+      );
 
+      const data = await response.json();
+      
       if (response.ok) {
         setEmailSent(true);
-        setSuccess('Reset instructions have been sent to your email!');
+        setSuccess(data.message || 'Reset instructions have been sent to your email!');
+        setFormData(prev => ({ ...prev, email: '' }));
       } else {
-        const data = await response.json();
         setError(data.message || 'Failed to send reset email');
       }
     } catch (err) {
-      setError('An error occurred. Please try again later.');
+      setError(err.message || 'An error occurred. Please try again later.');
     }
   };
 
-  const handleResetPassword = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
     if (formData.newPassword !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
     try {
-      // Here you would make an API call to reset the password
-      const response = await fetch('your-api/reset-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          token,
-          newPassword: formData.newPassword,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/auth/reset-password`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        }
+      );
 
-      if (response.ok) {
-        setSuccess('Password has been reset successfully!');
-        setTimeout(() => navigate('/signin'), 2000);
-      } else {
-        const data = await response.json();
-        setError(data.message || 'Failed to reset password');
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to reset password');
       }
+
+      setSuccess('Password reset successful!');
+      setTimeout(() => navigate('/signin'), 2000);
     } catch (err) {
-      setError('An error occurred. Please try again later.');
+      setError(err.message || 'An error occurred');
     }
   };
 
@@ -88,7 +94,7 @@ const ResetPassword = () => {
             <img src={teamPhoto} alt="FC ESCUELA Logo" />
           </div>
           <h1>Reset Password</h1>
-          <p>We'll help you get back into your account.</p>
+          <p>{token ? 'Enter your new password below.' : 'We\'ll help you get back into your account.'}</p>
         </div>
 
         <div className="reset-box">
@@ -107,10 +113,15 @@ const ResetPassword = () => {
                   onChange={handleInputChange}
                   required
                   placeholder="Enter your registered email"
+                  disabled={emailSent}
                 />
               </div>
-              <button type="submit" className="submit-btn">
-                {emailSent ? 'Resend Email' : 'Send Reset Instructions'}
+              <button 
+                type="submit" 
+                className="submit-btn"
+                disabled={emailSent}
+              >
+                {emailSent ? 'Email Sent' : 'Send Reset Instructions'}
               </button>
               <button 
                 type="button" 
@@ -122,7 +133,7 @@ const ResetPassword = () => {
             </form>
           ) : (
             // Reset Password Form
-            <form onSubmit={handleResetPassword} className="reset-form">
+            <form onSubmit={handleSubmit} className="reset-form">
               <div className="form-group">
                 <label>New Password</label>
                 <input
@@ -131,18 +142,17 @@ const ResetPassword = () => {
                   value={formData.newPassword}
                   onChange={handleInputChange}
                   required
-                  placeholder="Enter new password"
+                  minLength={6}
                 />
               </div>
               <div className="form-group">
-                <label>Confirm New Password</label>
+                <label>Confirm Password</label>
                 <input
                   type="password"
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   required
-                  placeholder="Confirm new password"
                 />
               </div>
               <button type="submit" className="submit-btn">Reset Password</button>
@@ -155,6 +165,15 @@ const ResetPassword = () => {
               <h3>Check Your Email</h3>
               <p>We've sent instructions to reset your password to {formData.email}</p>
               <p className="note">If you don't see the email, check your spam folder.</p>
+              <button 
+                onClick={() => {
+                  setEmailSent(false);
+                  setSuccess('');
+                }}
+                className="resend-btn"
+              >
+                Need to try again?
+              </button>
             </div>
           )}
         </div>

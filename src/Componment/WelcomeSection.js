@@ -156,7 +156,7 @@ const WelcomeSection = () => {
                 <div className="stats-container">
                     <div className="stat-item">
                         <FontAwesomeIcon icon={faCalendarAlt} className="stat-icon" />
-                        <span className="stat-number">2021</span>
+                        <span className="stat-number">2022</span>
                         <span className="stat-label">Founded</span>
                     </div>
                     <div className="stat-item">

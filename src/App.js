@@ -20,6 +20,7 @@ import { cssVariables } from './styles/variables';
 import TeamCalendar from './components/calendar/TeamCalendar';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import AdminRoutes from './pages/AdminRoutes';
+import UserProfile from './components/user/UserProfile';
 
 function App() {
   useEffect(() => {
@@ -77,6 +78,14 @@ function App() {
                 <AdminRoutes />
               </ProtectedRoute>
             }
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <UserProfile />
+              </ProtectedRoute>
+            } 
           />
         </Routes>
         <Footer />

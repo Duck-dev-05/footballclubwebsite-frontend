@@ -20,7 +20,7 @@ const SocialLogin = ({ onSocialLogin }) => {
       if (response.ok) {
         onSocialLogin(data);
       } else {
-        throw new Error(data.message || 'Failed to authenticate with Google');
+        console.error('Google login failed:', data.message);
       }
     } catch (error) {
       console.error('Google authentication error:', error);
@@ -57,6 +57,7 @@ const SocialLogin = ({ onSocialLogin }) => {
       </div>
       <div className="social-buttons">
         <GoogleLogin
+          clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
           onSuccess={handleGoogleSuccess}
           onError={() => console.log('Google Login Failed')}
           useOneTap
