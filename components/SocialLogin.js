@@ -1,26 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { useNavigate } from 'react-router-dom';
-import api from '../config/axios';  // Import api config
+import api from '../config/axios';
 
 const SocialLogin = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState('');
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const { data } = await api.post('/auth/google', {
+      console.log('Google credential received:', credentialResponse);
+
+      const response = await api.post('/auth/google', {
         credential: credentialResponse.credential
       });
+
+      console.log('Backend authentication successful:', response.data);
+
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
       
-      // Store token in localStorage
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      
-      // Redirect to dashboard or home
       navigate('/dashboard');
     } catch (error) {
-      console.error('Google login error:', error);
+      console.error('Google authentication failed:', error);
+      setError(error.response?.data?.message || 'Failed to authenticate with Google');
     }
   };
 
@@ -32,27 +37,36 @@ const SocialLogin = () => {
       
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      
       navigate('/dashboard');
     } catch (error) {
       console.error('Facebook login error:', error);
+      setError(error.response?.data?.message || 'Failed to login with Facebook');
     }
   };
 
   return (
     <div className="social-login">
-      <GoogleLogin
-        clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-        onSuccess={handleGoogleSuccess}
-        onError={() => console.log('Login Failed')}
-        useOneTap
-        auto_select
-      />
+      {error && <div className="error-message">{error}</div>}
+      
+      <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={() => {
+            console.error('Google login failed');
+            setError('Failed to authenticate with Google');
+          }}
+          useOneTap={false}
+          theme="filled_black"
+          text="signin_with"
+          shape="rectangular"
+          width={250}
+        />
+      </GoogleOAuthProvider>
 
       <FacebookLogin
         appId={process.env.REACT_APP_FACEBOOK_APP_ID}
         onSuccess={handleFacebookSuccess}
-        onFail={(error) => console.log('Login Failed!', error)}
+        onFail={(error) => setError('Facebook login failed')}
         className="facebook-login-button"
         style={{
           backgroundColor: '#4267b2',
