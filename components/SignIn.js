@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../config/axios';
 import SocialLogin from './SocialLogin';
 
 const SignIn = () => {
@@ -23,7 +23,7 @@ const SignIn = () => {
     setError('');
 
     try {
-      const { data } = await axios.post('/api/auth/login', formData);
+      const { data } = await api.post('/auth/login', formData);
       
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));

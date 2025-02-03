@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(passport.initialize());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/footballclub', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
