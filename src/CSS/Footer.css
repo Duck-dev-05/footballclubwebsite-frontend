@@ -1,14 +1,47 @@
 .footer {
     background-color: #333;
-    color: #fff;
-    padding: 1rem 0;
+    color: white;
+    padding: 20px 0;
     text-align: center;
-    margin-top: 3rem;
   }
   
-  .footer p {
+  .footer-content {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+  }
+  
+  .footer-links,
+  .footer-contact {
+    flex: 1;
+    margin: 0 20px;
+  }
+  
+  .footer-links h3,
+  .footer-contact h3 {
+    margin-bottom: 10px;
+  }
+  
+  .footer-links ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-links li {
+    margin: 5px 0;
+  }
+  
+  .footer-links a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
+  
+  .footer-bottom {
+    margin-top: 20px;
     font-size: 0.9rem;
-    color: #ccc;
-    margin: 0;
   }
   

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faCalendar, faClock, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -38,12 +38,6 @@ const TeamCalendar = () => {
     fetchTeamMembers();
   }, [navigate]);
 
-  useEffect(() => {
-    if (selectedDate && selectedMember) {
-      fetchAvailableSlots();
-    }
-  }, [selectedDate, selectedMember]);
-
   const fetchTeamMembers = async () => {
     setLoading(true);
     setError(null);
@@ -60,7 +54,7 @@ const TeamCalendar = () => {
     }
   };
 
-  const fetchAvailableSlots = async () => {
+  const fetchAvailableSlots = useCallback(async () => {
     if (!selectedDate || !selectedMember) return;
 
     setLoading(true);
@@ -83,7 +77,13 @@ const TeamCalendar = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedDate, selectedMember]);
+
+  useEffect(() => {
+    if (selectedDate && selectedMember) {
+      fetchAvailableSlots();
+    }
+  }, [selectedDate, selectedMember, fetchAvailableSlots]);
 
   const handleBooking = async () => {
     if (!selectedDate || !selectedMember || !selectedSlot) {
@@ -155,18 +155,11 @@ const TeamCalendar = () => {
     }
 
     // Add days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-      const isSelected = selectedDate && date.toDateString() === selectedDate.toDateString();
-      const isPast = date < new Date(new Date().setHours(0, 0, 0, 0));
-      
+    for (let i = 1; i <= daysInMonth; i++) {
+      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
       days.push(
-        <div
-          key={day}
-          className={`calendar-day ${isSelected ? 'selected' : ''} ${isPast ? 'past' : ''}`}
-          onClick={() => !isPast && setSelectedDate(date)}
-        >
-          {day}
+        <div key={`day-${i}`} className="calendar-day">
+          {i}
         </div>
       );
     }
@@ -174,88 +167,14 @@ const TeamCalendar = () => {
     return days;
   };
 
-  const renderTeamMembers = () => (
-    <div className="team-members">
-      <h3>
-        <FontAwesomeIcon icon={faUser} className="member-icon" />
-        Select Team Member
-      </h3>
-      <div className="member-list">
-        {teamMembers.map(member => (
-          <div
-            key={member.id}
-            className={`member-card ${selectedMember?.id === member.id ? 'selected' : ''}`}
-            onClick={() => setSelectedMember(member)}
-          >
-            <img src={member.imageUrl} alt={member.name} />
-            <h4>{member.name}</h4>
-            <p>{member.position}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const renderTimeSlots = () => (
-    <div className="time-slots">
-      <h3>
-        <FontAwesomeIcon icon={faClock} className="time-icon" />
-        Available Time Slots
-      </h3>
-      <div className="slot-list">
-        {availableSlots.map(slot => (
-          <button
-            key={slot}
-            className={`time-slot ${selectedSlot === slot ? 'selected' : ''}`}
-            onClick={() => setSelectedSlot(slot)}
-          >
-            {slot}
-          </button>
-        ))}
-      </div>
-      {selectedSlot && (
-        <button 
-          className="book-button" 
-          onClick={handleBooking}
-          disabled={loading}
-        >
-          {loading ? 'Booking...' : 'Book Appointment'}
-        </button>
-      )}
-    </div>
-  );
-
   return (
     <div className="team-calendar">
-      <div className="calendar-header-section">
-        <h2>Team Calendar</h2>
-        <p className="calendar-description">
-          Manage your team appointments and schedules
-        </p>
-      </div>
-      
-      {error && <div className="error-message">{error}</div>}
-      {bookingSuccess && <div className="success-message">Booking successful!</div>}
-      
       {renderCalendarHeader()}
-
-      <div className="calendar-grid">
-        <div className="calendar-header">Sun</div>
-        <div className="calendar-header">Mon</div>
-        <div className="calendar-header">Tue</div>
-        <div className="calendar-header">Wed</div>
-        <div className="calendar-header">Thu</div>
-        <div className="calendar-header">Fri</div>
-        <div className="calendar-header">Sat</div>
+      <div className="calendar-days">
         {renderCalendarDays()}
-      </div>
-
-      <div className="booking-section">
-        {renderTeamMembers()}
-        {selectedDate && selectedMember && renderTimeSlots()}
       </div>
     </div>
   );
 };
 
-export default TeamCalendar; 
+export default TeamCalendar;

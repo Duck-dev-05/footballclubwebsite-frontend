@@ -1,15 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { paypalConfig, handlePayPalError, isSandbox } from '../config/paypal';
+import { paypalConfig, handlePayPalError } from '../config/paypal';
 import MatchCard from '../components/tickets/MatchCard';
 import TicketOptions from '../components/tickets/TicketOptions';
 import OrderSummary from '../components/tickets/OrderSummary';
-import PaymentSection from '../components/tickets/PaymentSection';
 import '../CSS/BuyTickets.css';
 import { sendConfirmationEmail } from '../services/emailService';
 import Notification from '../components/common/Notification';
+
+const saveOrder = async (orderData) => {
+  try {
+    const response = await fetch('http://localhost:5046/api/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderData)
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to save order');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error saving order:', error);
+    throw error;
+  }
+};
 
 const BuyTickets = () => {
   const navigate = useNavigate();
@@ -17,8 +36,6 @@ const BuyTickets = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedTicketType, setSelectedTicketType] = useState(null);
   const [total, setTotal] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [paymentStatus, setPaymentStatus] = useState(null);
   const [notification, setNotification] = useState(null);
 
   const upcomingMatches = [
@@ -93,138 +110,12 @@ const BuyTickets = () => {
     }
   };
 
-  const createOrder = async (data, actions) => {
-    if (!selectedMatch || !selectedTicketType) return;
-
-    try {
-      return await actions.order.create({
-        purchase_units: [{
-          reference_id: `match-${selectedMatch.id}-${Date.now()}`,
-          description: `${selectedMatch.competition} Tickets`,
-          custom_id: `${selectedMatch.id}-${selectedTicketType.type}-${quantity}`,
-          soft_descriptor: "FC ESCUELA",
-          amount: {
-            currency_code: "USD",
-            value: total.toString(),
-            breakdown: {
-              item_total: {
-                currency_code: "USD",
-                value: total.toString()
-              }
-            }
-          },
-          items: [{
-            name: `${selectedTicketType.type} Ticket`,
-            description: `${selectedMatch.homeTeam} vs ${selectedMatch.awayTeam}`,
-            quantity: quantity.toString(),
-            unit_amount: {
-              currency_code: "USD",
-              value: selectedTicketType.price.toString()
-            },
-            category: "DIGITAL_GOODS"
-          }]
-        }],
-        application_context: {
-          brand_name: "FC ESCUELA",
-          shipping_preference: "NO_SHIPPING",
-          user_action: "PAY_NOW",
-          return_url: "https://fcescuela.com/success",
-          cancel_url: "https://fcescuela.com/cancel"
-        }
-      });
-    } catch (error) {
-      showNotification('error', 'Failed to create order. Please try again.');
-      handlePayPalError(error);
-      throw error;
-    }
-  };
-
   const showNotification = (type, message) => {
     setNotification({ type, message });
     // Auto-hide after 3 seconds
     setTimeout(() => {
       setNotification(null);
     }, 3000);
-  };
-
-  const onApprove = async (data, actions) => {
-    try {
-      setIsLoading(true);
-
-      // Capture the order
-      const details = await actions.order.capture();
-      
-      // Save order details to your backend
-      const savedOrder = await saveOrder({
-        orderId: details.id,
-        matchId: selectedMatch.id,
-        ticketType: selectedTicketType.type,
-        quantity: quantity,
-        total: total,
-        paymentDetails: details,
-        customerEmail: details.payer.email_address,
-        purchaseDate: new Date().toISOString()
-      });
-
-      setPaymentStatus('success');
-      showNotification('success', 'Payment successful! Redirecting to confirmation...');
-
-      // Send confirmation email
-      await sendConfirmationEmail({
-        email: details.payer.email_address,
-        orderDetails: {
-          orderId: details.id,
-          matchDetails: selectedMatch,
-          ticketType: selectedTicketType.type,
-          quantity: quantity,
-          total: total,
-          purchaseDate: new Date().toLocaleDateString(),
-          customerName: `${details.payer.name.given_name} ${details.payer.name.surname}`
-        }
-      });
-
-      // Redirect after delay
-      setTimeout(() => {
-        navigate('/tickets/confirmation', { 
-          state: { 
-            orderDetails: details,
-            matchDetails: selectedMatch,
-            ticketType: selectedTicketType,
-            quantity: quantity,
-            emailSent: true
-          }
-        });
-      }, 2000);
-
-    } catch (error) {
-      setPaymentStatus('failed');
-      showNotification('error', 'Payment failed. Please try again.');
-      handlePayPalError(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const saveOrder = async (orderData) => {
-    try {
-      // Make API call to your backend to save order
-      const response = await fetch('YOUR_API_ENDPOINT/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderData)
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to save order');
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Error saving order:', error);
-      throw error;
-    }
   };
 
   const processOrder = async (details) => {
@@ -343,10 +234,7 @@ const BuyTickets = () => {
                       }}
                       onApprove={async (data, actions) => {
                         try {
-                          setIsLoading(true);
-
                           const details = await actions.order.capture();
-                          setPaymentStatus('success');
                           showNotification('success', 'Payment successful! Redirecting to confirmation...');
                           
                           await processOrder(details);
@@ -363,20 +251,15 @@ const BuyTickets = () => {
                             });
                           }, 2000);
                         } catch (error) {
-                          setPaymentStatus('failed');
                           showNotification('error', 'Payment failed. Please try again.');
                           handlePayPalError(error);
-                        } finally {
-                          setIsLoading(false);
                         }
                       }}
                       onError={(err) => {
-                        setPaymentStatus('failed');
                         showNotification('error', 'An error occurred during payment. Please try again.');
                         handlePayPalError(err);
                       }}
                       onCancel={() => {
-                        setPaymentStatus(null);
                         showNotification('warning', 'Payment was cancelled');
                       }}
                     />

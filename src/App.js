@@ -6,7 +6,7 @@ import AboutUs from "./Componment/AboutUs";
 import FeaturedPlayer from "./Componment/FeaturedPlayer";
 import Footer from "./Componment/Footer";
 import WelcomeSection from "./Componment/WelcomeSection";
-import Login from './Componment/Login';
+import Login from './components/Login';
 import Fixtures from './Componment/Fixtures';
 import Contact from './Componment/Contact';
 import ResetPassword from './Componment/ResetPassword';

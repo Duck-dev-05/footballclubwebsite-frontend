@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../CSS/Gallery.css';
 
@@ -137,28 +137,20 @@ const Gallery = () => {
   };
 
   // Handle keyboard navigation
-  React.useEffect(() => {
+  useEffect(() => {
     const handleKeyPress = (e) => {
-      if (!selectedImage) return;
-      
-      switch(e.key) {
-        case 'ArrowLeft':
-          navigateImage('prev');
-          break;
-        case 'ArrowRight':
+      if (selectedImage) {
+        if (e.key === 'ArrowRight') {
           navigateImage('next');
-          break;
-        case 'Escape':
-          closeModal();
-          break;
-        default:
-          break;
+        } else if (e.key === 'ArrowLeft') {
+          navigateImage('prev');
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [selectedImage]);
+  }, [selectedImage, navigateImage]);
 
   return (
     <div className="gallery-page">
