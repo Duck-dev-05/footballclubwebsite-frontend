@@ -1,5 +1,6 @@
 // Connect to MongoDB
-use footballclub;
+const database = 'footballclub';
+db = db.getSiblingDB(database);
 
 // Drop existing collections if needed
 db.users.drop();
@@ -7,6 +8,7 @@ db.matches.drop();
 db.news.drop();
 db.gallery.drop();
 db.tickets.drop();
+db.calendarEvents.drop();
 
 // Create Users collection
 db.createCollection('users', {
@@ -114,6 +116,29 @@ db.createCollection('tickets', {
   }
 });
 
+// Create Calendar Events collection
+db.createCollection('calendarEvents', {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["title", "start", "end", "createdBy"],
+      properties: {
+        title: { bsonType: "string" },
+        start: { bsonType: "date" },
+        end: { bsonType: "date" },
+        type: { 
+          bsonType: "string",
+          enum: ["match", "training", "event"]
+        },
+        description: { bsonType: "string" },
+        location: { bsonType: "string" },
+        createdBy: { bsonType: "objectId" },
+        createdAt: { bsonType: "date" }
+      }
+    }
+  }
+});
+
 // Create indexes
 db.users.createIndex({ "email": 1 }, { unique: true });
 db.users.createIndex({ "username": 1 }, { unique: true });
@@ -133,11 +158,15 @@ db.tickets.createIndex({ "matchId": 1, "seatNumber": 1 }, { unique: true });
 db.tickets.createIndex({ "userId": 1 });
 db.tickets.createIndex({ "status": 1 });
 
+db.calendarEvents.createIndex({ "start": 1 });
+db.calendarEvents.createIndex({ "createdBy": 1 });
+db.calendarEvents.createIndex({ "type": 1 });
+
 // Insert sample data
 // Admin user
 db.users.insertOne({
   username: "admin",
-  email: "admin@example.com",
+  email: "admin@fcescuela.com",
   password: "$2a$10$your_hashed_password", // Replace with actual hashed password
   role: "admin",
   createdAt: new Date()
@@ -171,4 +200,18 @@ db.gallery.insertOne({
   description: "Team training session",
   uploadDate: new Date(),
   category: "Training"
-}); 
+});
+
+// Sample calendar event
+db.calendarEvents.insertOne({
+  title: "Team Practice",
+  start: new Date("2024-04-20T14:00:00Z"),
+  end: new Date("2024-04-20T16:00:00Z"),
+  type: "training",
+  description: "Regular team practice session",
+  location: "Training Ground",
+  createdBy: db.users.findOne({ role: "admin" })._id,
+  createdAt: new Date()
+});
+
+print("Database initialization completed successfully"); 

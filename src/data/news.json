@@ -1,0 +1,24 @@
+{
+  "news": [
+    {
+      "id": 1,
+      "title": "FC Escuela Wins Championship",
+      "content": "FC Escuela secured the league title with a stunning victory...",
+      "imageUrl": "/images/news/championship.jpg",
+      "publishedDate": "2024-04-01T10:00:00Z",
+      "author": "Sports Desk",
+      "isPublished": true,
+      "category": "Team News"
+    },
+    {
+      "id": 2,
+      "title": "New Training Facility Opening",
+      "content": "FC Escuela is proud to announce the opening of our new training facility...",
+      "imageUrl": "/images/news/facility.jpg",
+      "publishedDate": "2024-03-28T14:30:00Z",
+      "author": "Club Management",
+      "isPublished": true,
+      "category": "Club News"
+    }
+  ]
+} 

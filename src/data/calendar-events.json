@@ -1,0 +1,22 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "title": "Team Training",
+      "start": "2024-04-10T14:00:00Z",
+      "end": "2024-04-10T16:00:00Z",
+      "type": "training",
+      "description": "Regular team training session",
+      "location": "Training Ground"
+    },
+    {
+      "id": 2,
+      "title": "League Match vs Real Madrid Academy",
+      "start": "2024-04-15T19:30:00Z",
+      "end": "2024-04-15T21:30:00Z",
+      "type": "match",
+      "description": "Important league match",
+      "location": "Home Stadium"
+    }
+  ]
+} 

@@ -1,0 +1,26 @@
+{
+  "matches": [
+    {
+      "id": 1,
+      "homeTeam": "FC Escuela",
+      "awayTeam": "Real Madrid Academy",
+      "matchDate": "2024-05-01T15:00:00Z",
+      "venue": "Home Stadium",
+      "competition": "League Match",
+      "ticketPrice": 25.00,
+      "availableTickets": 1000,
+      "isSoldOut": false
+    },
+    {
+      "id": 2,
+      "homeTeam": "Barcelona Academy",
+      "awayTeam": "FC Escuela",
+      "matchDate": "2024-05-15T19:30:00Z",
+      "venue": "Camp Nou Training Ground",
+      "competition": "Cup Match",
+      "ticketPrice": 30.00,
+      "availableTickets": 800,
+      "isSoldOut": false
+    }
+  ]
+} 

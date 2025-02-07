@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { useNavigate } from 'react-router-dom';
+import { Box, Typography, Divider, Alert } from '@mui/material';
 import api from '../config/axios';
+import './SocialLogin.css';
 
 const SocialLogin = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const SocialLogin = () => {
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
+      setError('');
       console.log('Google credential received:', credentialResponse);
 
       const response = await api.post('/auth/google', {
@@ -31,6 +33,9 @@ const SocialLogin = () => {
 
   const handleFacebookSuccess = async (response) => {
     try {
+      setError('');
+      console.log('Facebook response:', response);
+
       const { data } = await api.post('/auth/facebook', {
         accessToken: response.accessToken
       });
@@ -45,10 +50,20 @@ const SocialLogin = () => {
   };
 
   return (
-    <div className="social-login">
-      {error && <div className="error-message">{error}</div>}
-      
-      <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+    <Box className="social-login-container">
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+
+      <Divider sx={{ my: 2 }}>
+        <Typography variant="body2" color="text.secondary">
+          OR CONTINUE WITH
+        </Typography>
+      </Divider>
+
+      <Box className="social-buttons">
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={() => {
@@ -59,28 +74,29 @@ const SocialLogin = () => {
           theme="filled_black"
           text="signin_with"
           shape="rectangular"
-          width={250}
+          width="100%"
         />
-      </GoogleOAuthProvider>
 
-      <FacebookLogin
-        appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-        onSuccess={handleFacebookSuccess}
-        onFail={(error) => setError('Facebook login failed')}
-        className="facebook-login-button"
-        style={{
-          backgroundColor: '#4267b2',
-          color: '#fff',
-          padding: '10px 20px',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          marginTop: '10px'
-        }}
-      >
-        Sign in with Facebook
-      </FacebookLogin>
-    </div>
+        <FacebookLogin
+          appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+          onSuccess={handleFacebookSuccess}
+          onFail={(error) => {
+            console.error('Facebook login failed:', error);
+            setError('Failed to authenticate with Facebook');
+          }}
+          className="facebook-login-button"
+          initParams={{
+            version: 'v18.0',
+            scope: 'email,public_profile'
+          }}
+        >
+          <Box className="facebook-button-content">
+            <img src="/facebook-icon.svg" alt="Facebook" />
+            <span>Continue with Facebook</span>
+          </Box>
+        </FacebookLogin>
+      </Box>
+    </Box>
   );
 };
 

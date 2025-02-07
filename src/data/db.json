@@ -1,0 +1,16 @@
+{
+  "club": {},
+  "features": {},
+  "users": [],
+  "matches": [],
+  "tickets": [],
+  "news": [],
+  "gallery": [],
+  "calendarEvents": [],
+  "metadata": {
+    "lastUpdated": "2025-02-05T14:39:48.073Z",
+    "version": "1.0.0",
+    "apiVersion": "v1",
+    "dataSource": "FC Escuela Database"
+  }
+}

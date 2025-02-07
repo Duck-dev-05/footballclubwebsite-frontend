@@ -1,0 +1,26 @@
+{
+  "tickets": [
+    {
+      "id": 1,
+      "matchId": 1,
+      "userId": 1,
+      "seatNumber": "A-101",
+      "price": 25.00,
+      "purchaseDate": "2024-04-01T10:30:00Z",
+      "status": "Active",
+      "paymentStatus": "Completed",
+      "paymentId": "pay_123456"
+    },
+    {
+      "id": 2,
+      "matchId": 1,
+      "userId": 2,
+      "seatNumber": "B-205",
+      "price": 25.00,
+      "purchaseDate": "2024-04-02T15:45:00Z",
+      "status": "Active",
+      "paymentStatus": "Completed",
+      "paymentId": "pay_123457"
+    }
+  ]
+} 

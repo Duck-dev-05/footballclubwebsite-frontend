@@ -1,0 +1,20 @@
+{
+  "gallery": [
+    {
+      "id": 1,
+      "title": "Training Session",
+      "imageUrl": "/images/gallery/training.jpg",
+      "description": "Team training session at the new facility",
+      "uploadDate": "2024-04-01T09:00:00Z",
+      "category": "Training"
+    },
+    {
+      "id": 2,
+      "title": "Match Day Victory",
+      "imageUrl": "/images/gallery/match.jpg",
+      "description": "Celebrating our latest victory",
+      "uploadDate": "2024-03-30T18:00:00Z",
+      "category": "Match"
+    }
+  ]
+} 

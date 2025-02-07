@@ -1,0 +1,50 @@
+.social-auth-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.google-button {
+  width: 100% !important;
+}
+
+.facebook-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.facebook-button:hover {
+  background-color: #1565c0;
+}
+
+.social-auth-divider {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.social-auth-divider::before,
+.social-auth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.social-auth-divider span {
+  padding: 0 10px;
+  color: #666;
+  font-size: 14px;
+} 

@@ -1,0 +1,29 @@
+{
+  "club": {
+    "name": "FC Escuela",
+    "founded": "2020",
+    "location": "Madrid, Spain",
+    "stadium": "Home Stadium",
+    "capacity": 5000,
+    "colors": {
+      "primary": "#1976d2",
+      "secondary": "#ffffff"
+    },
+    "social": {
+      "facebook": "https://facebook.com/fcescuela",
+      "twitter": "https://twitter.com/fcescuela",
+      "instagram": "https://instagram.com/fcescuela"
+    },
+    "contact": {
+      "email": "info@fcescuela.com",
+      "phone": "+34 123 456 789",
+      "address": "123 Football Street, Madrid, Spain"
+    }
+  },
+  "features": {
+    "enableSocialLogin": true,
+    "enableTicketBooking": true,
+    "enableLiveScores": true,
+    "enableNewsletterSubscription": true
+  }
+} 

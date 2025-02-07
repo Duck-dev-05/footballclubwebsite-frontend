@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Box, TextField, Button, Typography, Alert, Paper, Container } from '@mui/material';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import api from '../config/axios';
-import SocialLogin from './SocialLogin';
+import SocialAuth from './auth/SocialAuth';
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -35,73 +37,81 @@ const SignIn = () => {
   };
 
   return (
-    <div className="sign-in-container">
-      <div className="sign-in-left">
-        <img src="/path-to-your-logo.png" alt="FC ESCUELA" />
-        <div className="welcome-text">
-          <h1>Welcome to FC ESCUELA</h1>
-          <p>Join our football community and experience excellence in the beautiful game.</p>
-        </div>
-      </div>
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+      <Container maxWidth="sm">
+        <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
+          <Typography variant="h4" component="h1" gutterBottom align="center">
+            Sign In
+          </Typography>
 
-      <div className="sign-in-right">
-        <div className="auth-nav">
-          <span className="auth-nav-item active">Sign In</span>
-          <span className="auth-nav-item">Register</span>
-        </div>
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
 
-        {error && <div className="error-message">{error}</div>}
-        
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+            <TextField
+              fullWidth
+              label="Email"
               type="email"
-              id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               required
+              margin="normal"
             />
-          </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
+            <TextField
+              fullWidth
+              label="Password"
               type="password"
-              id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
+              margin="normal"
             />
-          </div>
 
-          <button type="submit" className="sign-in-btn">
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
             Sign In
-          </button>
-        </form>
+            </Button>
 
-        <div className="forgot-password">
-          <a href="/forgot-password">Forgot Password?</a>
-        </div>
+            <Box sx={{ textAlign: 'center', mb: 2 }}>
+              <Typography
+                component="a"
+                href="/forgot-password"
+                variant="body2"
+                sx={{ textDecoration: 'none' }}
+              >
+                Forgot Password?
+              </Typography>
+            </Box>
 
-        <div className="divider">
-          <span>Or sign in with</span>
-        </div>
+            <SocialAuth />
 
-        <div className="social-login">
-          <button className="social-btn google-btn">
-            <img src="/google-icon.svg" alt="" />
-            Sign in with Google
-          </button>
-          <button className="social-btn facebook-btn">
-            <img src="/facebook-icon.svg" alt="" />
-            Sign in with Facebook
-          </button>
-        </div>
-      </div>
-    </div>
+            <Box sx={{ mt: 2, textAlign: 'center' }}>
+              <Typography variant="body2">
+                Don't have an account?{' '}
+                <Typography
+                  component="a"
+                  href="/signup"
+                  variant="body2"
+                  sx={{ textDecoration: 'none' }}
+                >
+                  Sign Up
+                </Typography>
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+      </Container>
+    </GoogleOAuthProvider>
   );
 };
 

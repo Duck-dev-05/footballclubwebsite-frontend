@@ -1,0 +1,30 @@
+{
+  "players": [
+    {
+      "id": 1,
+      "name": "John Smith",
+      "position": "Forward",
+      "imageUrl": "/images/players/john-smith.jpg",
+      "description": "Leading striker with exceptional scoring ability",
+      "number": 9,
+      "stats": {
+        "goals": 15,
+        "assists": 8,
+        "appearances": 20
+      }
+    },
+    {
+      "id": 2,
+      "name": "David Martinez",
+      "position": "Midfielder",
+      "imageUrl": "/images/players/david-martinez.jpg",
+      "description": "Creative midfielder with excellent passing skills",
+      "number": 10,
+      "stats": {
+        "goals": 5,
+        "assists": 12,
+        "appearances": 22
+      }
+    }
+  ]
+} 

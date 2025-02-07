@@ -1,0 +1,41 @@
+.social-login-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.facebook-login-button {
+  width: 100%;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #1877f2;
+  color: white;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.facebook-login-button:hover {
+  background-color: #166fe5;
+}
+
+.facebook-button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.facebook-button-content img {
+  width: 20px;
+  height: 20px;
+} 
