@@ -1,14 +1,13 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: process.env.REACT_APP_API_URL,
+    baseURL: 'http://localhost:5046/api',
     headers: {
         'Content-Type': 'application/json'
-    },
-    withCredentials: true
+    }
 });
 
-// Request interceptor for adding auth token
+// Add request interceptor for JWT token
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
@@ -17,19 +16,16 @@ api.interceptors.request.use(
         }
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
 
-// Response interceptor for handling errors
+// Add response interceptor for error handling
 api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
             localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = '/signin';
+            window.location.href = '/login';
         }
         return Promise.reject(error);
     }

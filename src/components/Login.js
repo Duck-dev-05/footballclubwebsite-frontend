@@ -6,6 +6,8 @@ import { faGoogle, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { teamPhoto } from '../images';
 import '../CSS/Login.css';
+import authService from '../services/authService';
+import FacebookLogin from '@greatsumini/react-facebook-login';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -49,27 +51,14 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+    setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5046/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
-      }
-
-      handleLoginSuccess(data);
+      await authService.login(formData.email, formData.password);
+      navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'An error occurred during login');
+      setError(err.response?.data?.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -94,12 +83,26 @@ const Login = () => {
     // Add forgot password logic here
   };
 
-  const handleGoogleLogin = async () => {
-    window.location.href = `http://localhost:5046/api/auth/google`;
+  const handleGoogleSuccess = async (response) => {
+    try {
+      const result = await authService.googleLogin(response.credential);
+      if (result.success) {
+        handleLoginSuccess(result);
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'Google login failed');
+    }
   };
 
-  const handleFacebookLogin = () => {
-    window.location.href = `http://localhost:5046/api/auth/facebook`;
+  const handleFacebookLogin = async (response) => {
+    try {
+      const result = await authService.facebookLogin(response.accessToken);
+      if (result.success) {
+        handleLoginSuccess(result);
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'Facebook login failed');
+    }
   };
 
   return (
@@ -181,18 +184,37 @@ const Login = () => {
                   <div className="social-buttons">
                     <button 
                       className="google-btn"
-                      onClick={handleGoogleLogin}
+                      onClick={() => {
+                        // Initialize Google OAuth
+                        window.googleOAuth.init();
+                      }}
                     >
                       <FontAwesomeIcon icon={faGoogle} />
                       Sign in with Google
                     </button>
-                    <button 
-                      className="facebook-btn"
-                      onClick={handleFacebookLogin}
+                    <FacebookLogin
+                      appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+                      onSuccess={(response) => {
+                        handleFacebookLogin(response);
+                      }}
+                      onFail={(error) => {
+                        console.error('Facebook login failed:', error);
+                        setError('Failed to authenticate with Facebook');
+                      }}
+                      className="facebook-button"
+                      style={{
+                        backgroundColor: '#1877f2',
+                        color: 'white',
+                        padding: '10px 20px',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        width: '100%'
+                      }}
                     >
                       <FontAwesomeIcon icon={faFacebook} />
                       Sign in with Facebook
-                    </button>
+                    </FacebookLogin>
                   </div>
                 </div>
               </>

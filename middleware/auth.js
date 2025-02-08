@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+import { Navigate } from 'react-router-dom';
 
 exports.protect = async (req, res, next) => {
   try {
@@ -34,4 +35,14 @@ exports.authorize = (...roles) => {
     }
     next();
   };
-}; 
+};
+
+export function RequireAuth({ children }) {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        return <Navigate to="/login" replace />;
+    }
+
+    return children;
+} 

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Alert, Paper, Container } from '@mui/material';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import api from '../config/axios';
 import SocialAuth from './auth/SocialAuth';
 
@@ -22,96 +21,81 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-
     try {
-      const { data } = await api.post('/auth/login', formData);
-      
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      
-      navigate('/dashboard');
-    } catch (err) {
-      setError(err.response?.data?.message || 'An error occurred');
+      const response = await api.post('/auth/login', formData);
+      if (response.data.data?.token) {
+        localStorage.setItem('token', response.data.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.data.user));
+        navigate('/');
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'Login failed');
     }
   };
 
   return (
-    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-      <Container maxWidth="sm">
-        <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
-          <Typography variant="h4" component="h1" gutterBottom align="center">
+    <Container maxWidth="sm">
+      <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Typography component="h1" variant="h5" align="center">
             Sign In
           </Typography>
 
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
+          {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-            <TextField
-              fullWidth
-              label="Email"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              margin="normal"
-            />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={formData.email}
+            onChange={handleChange}
+          />
 
-            <TextField
-              fullWidth
-              label="Password"
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              margin="normal"
-            />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={formData.password}
+            onChange={handleChange}
+          />
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
             Sign In
-            </Button>
+          </Button>
 
-            <Box sx={{ textAlign: 'center', mb: 2 }}>
+          <SocialAuth />
+
+          <Box sx={{ mt: 2, textAlign: 'center' }}>
+            <Typography variant="body2">
+              Don't have an account?{' '}
               <Typography
                 component="a"
-                href="/forgot-password"
+                href="/signup"
                 variant="body2"
                 sx={{ textDecoration: 'none' }}
               >
-                Forgot Password?
+                Sign Up
               </Typography>
-            </Box>
-
-            <SocialAuth />
-
-            <Box sx={{ mt: 2, textAlign: 'center' }}>
-              <Typography variant="body2">
-                Don't have an account?{' '}
-                <Typography
-                  component="a"
-                  href="/signup"
-                  variant="body2"
-                  sx={{ textDecoration: 'none' }}
-                >
-                  Sign Up
-                </Typography>
-              </Typography>
-            </Box>
+            </Typography>
           </Box>
-        </Paper>
-      </Container>
-    </GoogleOAuthProvider>
+        </Box>
+      </Paper>
+    </Container>
   );
 };
 

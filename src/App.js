@@ -22,6 +22,7 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import AdminRoutes from './pages/AdminRoutes';
 import UserProfile from './components/user/UserProfile';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import TestConnection from './components/TestConnection';
 
 function App() {
   useEffect(() => {
@@ -89,6 +90,7 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            <Route path="/test" element={<TestConnection />} />
           </Routes>
           <Footer />
         </div>

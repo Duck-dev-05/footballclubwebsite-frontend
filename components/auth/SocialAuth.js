@@ -6,67 +6,50 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../config/axios';
 import './SocialAuth.css';
 
-const SocialAuth = ({ onSuccess }) => {
+const SocialAuth = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleGoogleSuccess = async (credentialResponse) => {
         try {
-            const response = await api.post('/auth/social/google', {
+            const response = await api.post('/auth/google', {
                 credential: credentialResponse.credential
             });
             
-            if (response.data.token) {
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('user', JSON.stringify(response.data.user));
-                onSuccess?.(response.data);
-                navigate('/dashboard');
+            if (response.data.data?.token) {
+                localStorage.setItem('token', response.data.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.data.user));
+                navigate('/');
             }
-        } catch (err) {
-            console.error('Google auth error:', err);
-            setError(err.response?.data?.message || 'Google sign in failed. Please try again.');
-        }
-    };
-
-    const handleFacebookSuccess = async (response) => {
-        try {
-            const apiResponse = await api.post('/auth/social/facebook', {
-                accessToken: response.accessToken
-            });
-            
-            if (apiResponse.data.token) {
-                localStorage.setItem('token', apiResponse.data.token);
-                localStorage.setItem('user', JSON.stringify(apiResponse.data.user));
-                onSuccess?.(apiResponse.data);
-                navigate('/dashboard');
-            }
-        } catch (err) {
-            console.error('Facebook auth error:', err);
-            setError(err.response?.data?.message || 'Facebook sign in failed. Please try again.');
+        } catch (error) {
+            setError(error.response?.data?.message || 'Google login failed');
         }
     };
 
     return (
-        <Box className="social-auth-container">
+        <Box sx={{ mt: 2 }}>
             {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
             
-            <Box className="social-buttons">
+            <Divider sx={{ my: 2 }}>
+                <Typography color="textSecondary">OR</Typography>
+            </Divider>
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <GoogleLogin
                     onSuccess={handleGoogleSuccess}
-                    onError={() => setError('Google sign in failed')}
-                    className="google-button"
+                    onError={() => setError('Google login failed')}
+                    size="large"
+                    width="100%"
                 />
-
-                <Divider sx={{ my: 2 }}>
-                    <Typography color="textSecondary">OR</Typography>
-                </Divider>
 
                 <FacebookLogin
                     appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-                    onSuccess={handleFacebookSuccess}
+                    onSuccess={(response) => {
+                        console.log('Facebook login success:', response);
+                    }}
                     onFail={(error) => {
-                        setError('Facebook sign in failed');
-                        console.error('Facebook auth error:', error);
+                        console.error('Facebook login failed:', error);
+                        setError('Failed to authenticate with Facebook');
                     }}
                     className="facebook-button"
                     style={{
