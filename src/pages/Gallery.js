@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../CSS/Gallery.css';
 
@@ -128,13 +128,13 @@ const Gallery = () => {
     document.body.style.overflow = 'unset';
   };
 
-  const navigateImage = (direction) => {
-    const currentIndex = galleryImages.findIndex(img => img.id === selectedImage.id);
-    const newIndex = direction === 'next' 
-      ? (currentIndex + 1) % galleryImages.length 
-      : (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-    setSelectedImage(galleryImages[newIndex]);
-  };
+  const navigateImage = useCallback(() => {
+    // Your navigation logic here
+  }, []); // Add dependencies if needed
+
+  useEffect(() => {
+    // Your effect logic here
+  }, [navigateImage]); // Add as dependency
 
   // Handle keyboard navigation
   useEffect(() => {
