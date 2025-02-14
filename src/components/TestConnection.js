@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import api from '../config/axios';
 
 const TestConnection = () => {
     const [status, setStatus] = useState('Testing connection...');
@@ -6,11 +7,10 @@ const TestConnection = () => {
     useEffect(() => {
         const testConnection = async () => {
             try {
-                const response = await fetch('http://localhost:5046/api/test');
-                const data = await response.json();
-                setStatus(data.message || 'Connection successful');
-            } catch (err) {
-                setStatus('Connection failed');
+                const response = await api.get('/health/database');
+                setStatus('Connected to backend successfully!');
+            } catch (error) {
+                setStatus('Failed to connect to backend: ' + error.message);
             }
         };
 

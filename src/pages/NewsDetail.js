@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { teamPhoto } from '../images';
@@ -6,16 +6,13 @@ import { teamPhoto } from '../images';
 const NewsDetail = () => {
   const { id } = useParams();
   
+  // Use the id parameter to fetch news data
   useEffect(() => {
     const fetchNewsData = async () => {
       try {
         const response = await fetch(`http://localhost:5046/api/news/${id}`);
         const data = await response.json();
-        // Actually use the data
-        if (data) {
-          // Update your state or do something with the data
-          console.log('News data received:', data);
-        }
+        // Handle the data
       } catch (error) {
         console.error('Error fetching news:', error);
       }
@@ -24,15 +21,7 @@ const NewsDetail = () => {
     if (id) {
       fetchNewsData();
     }
-  }, [id]); // Add id as dependency
-
-  const navigateImage = useCallback(() => {
-    // Your navigation logic here
-  }, []); // Add dependencies if needed
-
-  useEffect(() => {
-    // Your effect logic here
-  }, [navigateImage]); // Add as dependency since it's used in effect
+  }, [id]);
 
   // In a real app, fetch the news data based on id
   const newsItem = {
