@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Alert, Paper, Container } from '@mui/material';
-import api from '../config/axios';
+import { db } from '../firebaseConfig'; // Import Firestore
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import SocialAuth from './auth/SocialAuth';
 
 const SignIn = () => {
@@ -22,14 +23,19 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post('/auth/login', formData);
-      if (response.data.data?.token) {
-        localStorage.setItem('token', response.data.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.data.user));
+      const usersRef = collection(db, 'users'); // Assuming you have a 'users' collection
+      const q = query(usersRef, where('email', '==', formData.email), where('password', '==', formData.password));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const user = querySnapshot.docs[0].data();
+        localStorage.setItem('user', JSON.stringify(user));
         navigate('/');
+      } else {
+        setError('Invalid email or password');
       }
     } catch (error) {
-      setError(error.response?.data?.message || 'Login failed');
+      setError('Login failed');
     }
   };
 

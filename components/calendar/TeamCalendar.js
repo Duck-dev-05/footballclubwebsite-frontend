@@ -17,7 +17,8 @@ import {
   Box,
   CircularProgress
 } from '@mui/material';
-import api from '../../config/axios';
+import { db } from '../../firebaseConfig'; // Import Firestore
+import { collection, getDocs } from 'firebase/firestore';
 import './TeamCalendar.css';
 
 const TeamCalendar = () => {
@@ -41,12 +42,13 @@ const TeamCalendar = () => {
   const fetchEvents = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/calendar/events');
-      setEvents(response.data.map(event => ({
-        ...event,
-        backgroundColor: getEventColor(event.type),
-        className: `event-${event.type}`
-      })));
+      const eventsRef = collection(db, 'events'); // Assuming you have an 'events' collection
+      const querySnapshot = await getDocs(eventsRef);
+      const eventsData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setEvents(eventsData);
     } catch (error) {
       console.error('Error fetching events:', error);
     } finally {
