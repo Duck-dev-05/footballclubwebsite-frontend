@@ -22,7 +22,25 @@ const SocialAuth = () => {
                 navigate('/');
             }
         } catch (error) {
+            console.error('Error during Google login:', error);
             setError(error.response?.data?.message || 'Google login failed');
+        }
+    };
+
+    const handleFacebookSuccess = async (response) => {
+        try {
+            const res = await api.post('/auth/facebook', {
+                accessToken: response.accessToken
+            });
+            
+            if (res.data.data?.token) {
+                localStorage.setItem('token', res.data.data.token);
+                localStorage.setItem('user', JSON.stringify(res.data.data.user));
+                navigate('/');
+            }
+        } catch (error) {
+            console.error('Error during Facebook login:', error);
+            setError(error.response?.data?.message || 'Facebook login failed');
         }
     };
 
@@ -44,9 +62,7 @@ const SocialAuth = () => {
 
                 <FacebookLogin
                     appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-                    onSuccess={(response) => {
-                        console.log('Facebook login success:', response);
-                    }}
+                    onSuccess={handleFacebookSuccess}
                     onFail={(error) => {
                         console.error('Facebook login failed:', error);
                         setError('Failed to authenticate with Facebook');

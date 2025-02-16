@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Alert, Paper, Container } from '@mui/material';
 import { db } from '../firebaseConfig'; // Import Firestore
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import SocialAuth from './auth/SocialAuth';
 
 const SignIn = () => {
@@ -23,19 +23,15 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const usersRef = collection(db, 'users'); // Assuming you have a 'users' collection
-      const q = query(usersRef, where('email', '==', formData.email), where('password', '==', formData.password));
-      const querySnapshot = await getDocs(q);
-
-      if (!querySnapshot.empty) {
-        const user = querySnapshot.docs[0].data();
-        localStorage.setItem('user', JSON.stringify(user));
-        navigate('/');
-      } else {
-        setError('Invalid email or password');
-      }
+      // Add user to Firestore
+      const usersRef = collection(db, 'users');
+      await addDoc(usersRef, {
+        email: formData.email,
+        password: formData.password, // Note: Storing passwords in plain text is not secure. Use hashing in production.
+      });
+      navigate('/');
     } catch (error) {
-      setError('Login failed');
+      setError('Sign up failed');
     }
   };
 
