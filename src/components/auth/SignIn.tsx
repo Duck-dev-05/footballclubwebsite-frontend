@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -19,35 +19,54 @@ const auth = getAuth(app);
 const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
     const handleSignIn = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null);
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             console.log('User signed in:', userCredential.user);
         } catch (error) {
+            setError('Error signing in: ' + (error as Error).message);
             console.error('Error signing in:', error);
         }
     };
 
+    const handleGoogleSignIn = async () => {
+        const provider = new GoogleAuthProvider();
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            console.log('User signed in with Google:', user);
+        } catch (error) {
+            setError('Error signing in with Google: ' + (error as Error).message);
+            console.error('Error signing in with Google:', error);
+        }
+    };
+
     return (
-        <form onSubmit={handleSignIn}>
-            <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                required
-            />
-            <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                required
-            />
-            <button type="submit">Sign In</button>
-        </form>
+        <div>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <form onSubmit={handleSignIn}>
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                    required
+                />
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    required
+                />
+                <button type="submit">Sign In</button>
+            </form>
+            <button onClick={handleGoogleSignIn}>Sign In with Google</button>
+        </div>
     );
 };
 

@@ -21,8 +21,9 @@ import TeamCalendar from './components/calendar/TeamCalendar';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import AdminRoutes from './pages/AdminRoutes';
 import UserProfile from './components/user/UserProfile';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import TestConnection from './components/TestConnection';
+import ErrorBoundary from './components/ErrorBoundary';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 function App() {
   useEffect(() => {
@@ -34,67 +35,69 @@ function App() {
 
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-      <Router>
-        <div className="App">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<WelcomeSection />} />
-            <Route path="/about" element={<AboutUs />} />
-            <Route path="/FeaturedPlayers" element={<FeaturedPlayer />} />
-            <Route path="/fixtures" element={<Fixtures />} />
-            <Route path="/signin" element={<Login />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/reset-password/:token" element={<ResetPassword />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/news/:id" element={<NewsDetail />} />
-            <Route path="/tickets" element={<BuyTickets />} />
-            <Route 
-              path="/membership" 
-              element={
-                <ProtectedRoute allowedRoles={['user', 'admin']}>
-                  <Membership />
-                </ProtectedRoute>
-              }
-            />
-            <Route 
-              path="/tickets/confirmation" 
-              element={
-                <ProtectedRoute allowedRoles={['user', 'admin']}>
-                  <TicketConfirmation />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route 
-              path="/team-calendar" 
-              element={
-                <ProtectedRoute allowedRoles={['player', 'admin']}>
-                  <TeamCalendar />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/admin/*" 
-              element={
-                <ProtectedRoute allowedRoles={['admin']}>
-                  <AdminRoutes />
-                </ProtectedRoute>
-              }
-            />
-            <Route 
-              path="/profile" 
-              element={
-                <ProtectedRoute>
-                  <UserProfile />
-                </ProtectedRoute>
-              } 
-            />
-            <Route path="/test" element={<TestConnection />} />
-          </Routes>
-          <Footer />
-        </div>
-      </Router>
+      <ErrorBoundary>
+        <Router>
+          <div className="App">
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<WelcomeSection />} />
+              <Route path="/about" element={<AboutUs />} />
+              <Route path="/FeaturedPlayers" element={<FeaturedPlayer />} />
+              <Route path="/fixtures" element={<Fixtures />} />
+              <Route path="/signin" element={<Login />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/news" element={<News />} />
+              <Route path="/news/:id" element={<NewsDetail />} />
+              <Route path="/tickets" element={<BuyTickets />} />
+              <Route 
+                path="/membership" 
+                element={
+                  <ProtectedRoute allowedRoles={['user', 'admin']}>
+                    <Membership />
+                  </ProtectedRoute>
+                }
+              />
+              <Route 
+                path="/tickets/confirmation" 
+                element={
+                  <ProtectedRoute allowedRoles={['user', 'admin']}>
+                    <TicketConfirmation />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route 
+                path="/team-calendar" 
+                element={
+                  <ProtectedRoute allowedRoles={['player', 'admin']}>
+                    <TeamCalendar />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/*" 
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <AdminRoutes />
+                  </ProtectedRoute>
+                }
+              />
+              <Route 
+                path="/profile" 
+                element={
+                  <ProtectedRoute>
+                    <UserProfile />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route path="/test" element={<TestConnection />} />
+            </Routes>
+            <Footer />
+          </div>
+        </Router>
+      </ErrorBoundary>
     </GoogleOAuthProvider>
   );
 }
